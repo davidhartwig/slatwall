@@ -1,5 +1,7 @@
 /**
  * Validates true if the model value matches a regex string.
+ * @module swvalidation
+ * @class swValidationRegex
  */
 
 angular.module('slatwalladmin').directive("swvalidationregex", function() {

@@ -104,7 +104,6 @@ angular.module('slatwalladmin')
 				    $scope.$item = $item;
 				    $scope.$model = $model;
 				    $scope.$label = $label;
-				 
 					angular.extend($scope.productBundleGroup.data.productBundleGroupType.data,$item);
 					var parentType = $slatwall.newType();
 					parentType.data.typeID = '154dcdd2f3fd4b5ab5498e93470957b8';

@@ -1,5 +1,7 @@
 /**
  *  Validates true if the user value != the property value.
+ *  @module swvalidation
+ *  @class swValidationNEQ
  */
 angular.module('slatwalladmin').directive("swvalidationneq", function() {
     return {

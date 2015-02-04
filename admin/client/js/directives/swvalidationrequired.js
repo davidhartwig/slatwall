@@ -1,5 +1,7 @@
 /**
  * Returns true if the uservalue is empty and false otherwise
+ * @module swvalidation
+ * @class swValidationRequired
  */
 
 angular.module('slatwalladmin').directive("swvalidationrequired", function() {

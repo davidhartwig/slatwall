@@ -1,8 +1,7 @@
 /**
  * True if the data type matches the given data type.
- */
-/**
- * Validates true if the model value is a numeric value.
+ * @module swvalidation
+ * @class swValidationDataType
  */
 angular.module('slatwalladmin').directive("swvalidationdatatype", function() {
     return {

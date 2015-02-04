@@ -1,5 +1,7 @@
 /**
  * Returns true if the user value is greater than the max length.
+ * @module swvalidation
+ * @class swValidationMaxLength
  */
 angular.module('slatwalladmin').directive("swvalidationmaxlength", function() {
     return {

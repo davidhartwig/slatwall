@@ -1,6 +1,9 @@
 /**
  * This validate directive will look at the current element, figure out the context (save, edit, delete) and 
  * validate based on that context as defined in the validation properties object.
+ * @module swvalidation
+ * @class swValidate
+ * @deprecated This class was replaced by the swvalidation directives
  */
 'use strict';
 angular.module('slatwalladmin').directive('swValidate',

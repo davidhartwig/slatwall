@@ -1,8 +1,7 @@
 /**
  * Returns true if the user value is greater than the min length.
- */
-/**
- * Returns true if the user value is greater than the minimum value.
+ * @module swvalidation
+ * @class swValidationMinLength
  */
 angular.module('slatwalladmin').directive("swvalidationminlength", function() {
     return {

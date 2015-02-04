@@ -1,5 +1,7 @@
 /**
  * Returns true if the user value is greater than the min value.
+ * @module swvalidation
+ * @class swValidationMaxValue
  */
 angular.module('slatwalladmin').directive("swvalidationmaxvalue", function() {
     return {

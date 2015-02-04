@@ -1,7 +1,10 @@
 /**
  * SwValidationGTE: Validates true if the user value >= to the constraint value.
- * @usage <input type='text' swvalidationgte='5' /> will validate false if the user enters
- * value less than OR equal to 5.
+ * @module swvalidation
+ * @class swValidationGTE
+ * @example 
+ * 		<input type='text' swvalidationgte='5' /> will validate false if the user enters
+ * 		value less than OR equal to 5.
  */
 
 angular.module('slatwalladmin').directive("swvalidationgte", function() {

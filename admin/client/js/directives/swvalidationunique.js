@@ -1,25 +1,55 @@
 /**
  * Validates true if the given object is 'unique' and false otherwise.
+ * @module swvalidation
+ * @class swValidationUnique
  */
-angular.module('slatwalladmin').directive("swvalidationunique", function() {
-	return {
-		restrict : "A",
-		require : "ngModel",
-		link : function(scope, element, attributes, ngModel) {
-			var value = ngModel.modelValue || ngModel.viewValue;
-			var valObj = scope.propertyDisplay.object.metaData.$$className; 
-			return $http.get('/index.cfm?slatAction=api:main.getValidationPropertyStatus&object=' + 
-					valObj + "&propertyidentifier=" + 
-					scope.propertyDisplay[scope.propertyDisplay.property] + "&false" )
-			.then(function resolved() {
-				//If this Object name exists, this means validation fails
-				console.log("exists");
-				return $q.reject('exists');
-			}, function rejected() {
-				console.log("does not exists, validation passes");
-				//Object name does not exist so this validation passes
-				return true; 
-			});
-		}
-	};
-});
+angular
+		.module('slatwalladmin')
+		.directive(
+				"swvalidationunique",
+				[
+						"$http",
+						"$q",
+						function($http, $q) {
+							return {
+								restrict : "A",
+								require : "^ngModel",
+								link : function(scope, element, attributes,
+										ngModel) {
+									// ---------Setup the check when the model changes
+									ngModel.$validators.swvalidationunique = function(
+											modelValue, viewValue) {
+
+										var valObj = scope.propertyDisplay.object.metaData.className;
+										var valProp = scope.propertyDisplay.object.metaData.attributeValues.fkcolumn;
+										console.log(valObj);
+										console.log(valProp);
+										$http
+												.get(
+														'/index.cfm?slatAction=api:main.getValidationPropertyStatus&object='
+																+ valObj
+																+ "&propertyidentifier="
+																+ valProp
+																+ "&constraintValue=false")
+												.success(
+														function(data, status,
+																headers, config) {
+															if (data.uniqueStatus) {
+																return true; // Unique is true
+
+															} else {
+																return false; // Unique is false
+															}
+														})
+												.error(
+														function(data, status,
+																headers, config) {
+															//Error.
+															return false;
+														});
+
+									};
+									//---------End $validators
+								}
+							};
+						} ]);

@@ -1,7 +1,10 @@
 /**
  * SwValidationLTE: Validates true if the user value <= to the constraint value.
- * @usage <input type='number' swvalidationlte='5000' /> will validate false if the user enters
- * value greater than OR equal to 5,000.
+ * @module swvalidation
+ * @class swValidationLTE
+ * @example
+ * 		 <input type='number' swvalidationlte='5000' /> will validate false if the user enters
+ * 		value greater than OR equal to 5,000.
  */
 angular.module('slatwalladmin').directive("swvalidationlte", function() {
     return {

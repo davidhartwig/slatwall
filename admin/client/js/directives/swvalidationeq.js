@@ -1,7 +1,10 @@
 /**
  * SwValidationEQ: Validates true if the user value == the constraint value.
- * @usage <input type='text' swvalidationgte='5' /> will validate false if the user enters
- * value other than 5.
+ * @module swvalidation
+ * @class swValidationEQ
+ * @example 
+ * 		<input type='text' swvalidationgte='5' /> will validate false if the user enters
+ * 		value other than 5.
  */
 
 angular.module('slatwalladmin').directive("swvalidationeq", function() {
