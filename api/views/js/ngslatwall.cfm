@@ -767,15 +767,20 @@ Notes:
 						    		var entityName = modifiedData.objectLevel.metaData.className;
 						    		var context = 'save';
 						    		
-						    		
+						    
 						    		var savePromise = slatwallService.saveEntity(entityName,entityInstance.$$getID(),params,context);
 						    		savePromise.then(function(response){
 						    			var returnedIDs = response.data;
-						    			<!--- TODO: restet form --->
-										<!---//entityInstance.form.$setPristine();
-										//--->
+										//Clear all inputs (this is a temp solution)
+										//var forms = entityInstance.forms;
+										//for (var form in forms){
+											//form.$setPristine();
+											//$('input').val('');
+										//}
 										_addReturnedIDs(returnedIDs,modifiedData.objectLevel);
 									});
+									
+									
 								}else{
 						    		
 						    		//select first, visible, and enabled input with a class of ng-invalid
@@ -789,6 +794,7 @@ Notes:
 									
 									$location.hash(targetID);
 						    		$anchorScroll();
+						    		return false; //just needs to return some value.
 					    		}
 							});
 							return timeoutPromise;

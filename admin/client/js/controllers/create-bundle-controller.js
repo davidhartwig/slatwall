@@ -76,7 +76,22 @@ angular.module('slatwalladmin').controller('create-bundle-controller', [
 		}
 
 		$scope.saveProductBundle = function(closeDialogIndex){
-			$scope.product.$$save();
+			//
+			var productSavePromise = $scope.product.$$save();
+				  productSavePromise.then(function(){
+					
+				$log.debug("Product still is: ");
+				$log.debug($scope.product);
+				$log.debug("Saving Product Bundle Group: ");
+				$log.debug(productSavePromise);
+				//If finish has been called and there is no error ($$state value will be defined on error)
+				if (angular.isDefined(closeDialogIndex) && !angular.isDefined(productSavePromise.$$state.value)){
+					$log.debug("Closing the dialog because the product was saved and finish was clicked.");
+					dialogService.removePageDialog(closeDialogIndex);
+				}
+			});
+			
+			
 		};
 		
 	}
