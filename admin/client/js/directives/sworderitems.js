@@ -26,7 +26,7 @@ angular.module('slatwalladmin')
 				$log.debug('Init Order Item');
 				$log.debug(scope.orderId);	
 				scope.customAttributeNames = [];
-				
+				var self = this;
 				//Setup the data needed for each order item object.
 				var columnsConfig =[
 				         {
@@ -207,6 +207,85 @@ angular.module('slatwalladmin')
 					//scope.orderItems = value.records;
 					console.log('order items');
 					console.log(scope.orderItems);
+					var attributesConfig = [
+											{
+												"isDeletable" : false,
+												"isExportable" : true,
+												"propertyIdentifier" : "_attribute.attributeID",
+												"ormtype" : "id",
+												"isVisible" : false,
+												"isSearchable" : true,
+												"title" : "attributeID",
+												"sorting" : {
+													"active" : false,
+													"sortOrder" : "asc",
+													"priority" : 0
+												}
+											},
+											{
+												"isDeletable" : true,
+												"isExportable" : true,
+												"propertyIdentifier" : "_attribute.attributeCode",
+												"ormtype" : "string",
+												"isVisible" : true,
+												"isSearchable" : true,
+												"title" : "Attribute Code",
+												"sorting" : {
+													"active" : false,
+													"sortOrder" : "asc",
+													"priority" : 0
+												}
+											},
+											{
+												"title" : "Attribute Name",
+												"propertyIdentifier" : "_attribute.attributeName",
+												"isVisible" : true,
+												"isDeletable" : true,
+												"sorting" : {
+													"active" : false,
+													"sortOrder" : "asc",
+													"priority" : 0
+												},
+											},
+											{
+											"propertyIdentifier":"_attribute.displayOnOrderDetailFlag",
+											"ormtype":"boolean",
+											"isVisible":true,
+											"isSearchable":true,
+											"title":"Display On Order Detail Page",
+											} ];	
+					
+					var attributesFilters =[
+					         			    {
+					         			      "filterGroup": [
+					         			        {
+					         			          "propertyIdentifier": "_attribute.displayOnOrderDetailFlag",
+					         			          "comparisonOperator": "=",
+					         			          "value": true
+					         			        }
+					         			       
+					         			      ]
+					         			    }
+					         			  ];
+					var attributeOptions = {
+							columnsConfig:angular.toJson(attributesConfig),
+							filterGroupsConfig:angular.toJson(attributesFilters),
+							allRecords:true
+						};
+					var attItemsPromise = $slatwall.getEntity('attribute', attributeOptions);
+					attItemsPromise.then(function(value){
+						console.log("Custom Attribute Values = ");
+						console.log(value.records);
+						angular.forEach(value.records, function(i){
+							console.log(i.attributeCode);//<--- Custom attribute
+							//Use that custom attribute name to get the value.
+							
+							
+						});
+					});
+					
+					
+					
 				});
 				
 				

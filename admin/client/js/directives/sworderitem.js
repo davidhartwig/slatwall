@@ -26,9 +26,11 @@ angular.module('slatwalladmin').directive('swOrderItem',
 		},
 		templateUrl:partialsPath+"orderitem.html",
 		link : function(scope, element, attr) {
+			
 			$log.debug('order item');
 			$log.debug(scope.orderItem);
 			//define how we get child order items
+			
 			var columnsConfig =[
 		         {
 			      "isDeletable": false,
