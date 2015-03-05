@@ -4,9 +4,11 @@ angular.module('slatwalladmin')
 .factory('collectionService',[
 	'$filter',
 	'$log',
+	'filterService',
 	function(
 		$filter,
-		$log
+		$log,
+		filterService
 	){
 		/*properties*/
 		var _collection = null;
@@ -14,6 +16,7 @@ angular.module('slatwalladmin')
 		var _filterPropertiesList = {};
 		var _filterCount = 0;
 		var _orderBy = $filter('orderBy');
+		var myFilterService = filterService;
 		
 		var collectionService = {
 			setFilterCount: function(number){
@@ -83,6 +86,7 @@ angular.module('slatwalladmin')
 				if(angular.isUndefined(prepareForFilterGroup)){
 					prepareForFilterGroup = false;
 				}
+				
 				var filterItem = {
 						displayPropertyIdentifier:"",
 						propertyIdentifier:"",
@@ -94,6 +98,7 @@ angular.module('slatwalladmin')
 						$$siblingItems:filterItemGroup,
 						setItemInUse:setItemInUse				
 					};
+				
 				if(filterItemGroup.length !== 0){
 					filterItem.logicalOperator = "AND";
 				}
@@ -101,9 +106,13 @@ angular.module('slatwalladmin')
 				if(prepareForFilterGroup === true){
 					filterItem.$$prepareForFilterGroup = true;
 				}
-				
+				//--->Testing new filter service
 				filterItemGroup.push(filterItem);
-				
+				console.log("Adding new filteritem");
+				myFilterService.registerNewFilter(filterItem);
+				console.log("Number of Filters: " + myFilterService.getFilterCount());
+				var allFilters = myFilterService.getAllFilterItems();
+				console.dir(allFilters);
 				
 				this.selectFilterItem(filterItem);
 				
@@ -118,6 +127,14 @@ angular.module('slatwalladmin')
 					$$isNew:"true",
 					setItemInUse:setItemInUse	
 				};
+				//-->
+				console.log("Adding new filterGroupitem");
+				var index = myFilterService.registerNewFilter(filterGroupItem);
+				myFilterService.getFilterCount();
+				console.log(myFilterService.getFilterAt(index));
+				var allFilters = myFilterService.getAllFilterItems();
+				
+				//--->Testing new filterService
 				if(filterItemGroup.length !== 0){
 					filterGroupItem.logicalOperator = "AND";
 				};
@@ -138,6 +155,8 @@ angular.module('slatwalladmin')
 					delete filterItem.logicalOperator;
 				}
 				filterGroupItem.setItemInUse = filterItem.setItemInUse;
+				
+				
 				filterGroupItem.$$siblingItems = filterItem.$$siblingItems;
 				filterItem.$$siblingItems = [];
 				

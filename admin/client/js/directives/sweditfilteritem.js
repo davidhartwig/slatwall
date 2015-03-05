@@ -149,11 +149,11 @@ angular.module('slatwalladmin')
 			scope.selectedFilterPropertyChanged = function(selectedFilterProperty){
 				$log.debug('selectedFilterProperty');
 				$log.debug(selectedFilterProperty);
-				
-				
+
 				if(angular.isDefined(scope.selectedFilterProperty.selectedCriteriaType)){
 					delete scope.selectedFilterProperty.selectedCriteriaType;
 				}
+				
 				if(angular.isDefined(scope.filterItem.value)){
 					delete scope.filterItem.value;
 				}
@@ -179,9 +179,16 @@ angular.module('slatwalladmin')
 					scope.removeFilterItem({filterItemIndex:scope.filterItemIndex});
 				}
 			};
-			
+			/**
+			 * Saves a filter Item 
+			 * @param selectedFilterProperty
+			 * @param filterItem
+			 * @param callback
+			 */
 			scope.saveFilter = function(selectedFilterProperty,filterItem,callback){
 				$log.debug('saveFilter begin');
+				
+				//What is this doing?
 				if(angular.isDefined(selectedFilterProperty.selectedCriteriaType) && angular.equals({}, selectedFilterProperty.selectedCriteriaType)){
 					return;
 				}
@@ -309,10 +316,19 @@ angular.module('slatwalladmin')
 					if(angular.isDefined(selectedFilterProperty.fieldtype)){
 						filterItem.fieldtype = selectedFilterProperty.fieldtype;
 					}
+					
 					for(var siblingIndex in filterItem.$$siblingItems){
 						filterItem.$$siblingItems[siblingIndex].$$disabled = false;
+						console.log("Viewing saved sibling items");
+						console.log(filterItem.$$siblingItems[siblingIndex].$$disabled);
 					}
-					
+					//Lets try setting siblings another way
+					/*
+					for (var i = 0; i <= filterItem.$$siblingItems.length -1; i++){
+						console.log("Trying sibling " + i);
+						filterItem.$$siblingItems[i].$$disabled = false;
+					}
+					*/
 					filterItem.conditionDisplay = selectedFilterProperty.selectedCriteriaType.display;
 					
 					//if the add to New group checkbox has been checked then we need to transplant the filter item into a filter group
