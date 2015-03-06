@@ -28,11 +28,11 @@
       	<label ng-show="selectedFilterProperty.selectedCriteriaType.showCriteriaStart" class="col-sm-12 control-label s-no-paddings" for="formGroupInputSmall">Start Date:</label>
       
       	<p class="input-group" ng-show="selectedFilterProperty.selectedCriteriaType.showCriteriaStart">
-          <input 	type="text" class="form-control" 
+          <input type="text" class="form-control" 
           			datepicker-popup="MMM dd, yyyy hh:mm a" 
           			ng-model="selectedFilterProperty.criteriaRangeStart" 
           			is-open="openedCalendarStart"  
-          			close-text="Close" 
+          			close-text="Close"
           			ng-change="criteriaRangeChanged(selectedFilterProperty)"
           			ng-disabled="selectedFilterProperty.selectedCriteriaType.disableCriteriaStart"
           			readonly

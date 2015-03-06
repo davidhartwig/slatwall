@@ -254,8 +254,11 @@ component entityname="SlatwallOrderItem" table="SwOrderItem" persistent="true" a
 		if(isNull(arguments.orderItem)){
 			arguments.orderItem = this;
 		}
-		
+		try {
 		var amountType = arguments.orderItem.getProductBundleGroup().getAmountType();
+		} catch (any e){
+			amountType = "none"; 
+		}
 		//fixed
 		if(amountType == 'fixed'){
 			return arguments.orderItem.getProductBundleGroup().getAmount();

@@ -171,7 +171,7 @@ angular.module('slatwalladmin')
 			    
 			    scope.conditionOptions = getDateOptions();
 				scope.today = function() {
-					if (angular.isDefined(scope.selectedFilterProperty)) {
+					if (scope.selectedFilterProperty != null && angular.isDefined(scope.selectedFilterProperty)) {
 						scope.selectedFilterProperty.criteriaRangeStart = new Date();
 						scope.selectedFilterProperty.criteriaRangeEnd = new Date();
 					}
@@ -208,7 +208,7 @@ angular.module('slatwalladmin')
 					
 				  	var selectedCondition = selectedFilterProperty.selectedCriteriaType;
 				  	//check whether condition is checking for null values in date
-				  	if(angular.isDefined(selectedCondition.dateInfo)){
+				  	if(selectedCondition != null & angular.isDefined(selectedCondition.dateInfo)){
 				  		//is condition a calculation
 				  		if(selectedCondition.dateInfo.type === 'calculation'){
 				  			selectedCondition.showCriteriaStart = true;
@@ -222,7 +222,7 @@ angular.module('slatwalladmin')
 				  				$log.debug('Not toDate');
 				  				selectedCondition.showNumberOf = true; 
 				  				selectedCondition.conditionDisplay = 'Number of '+ selectedCondition.dateInfo.measureTypeDisplay + ' :';
-				  				
+				  			
 		  					}else{
 		  						$log.debug('toDate');
 		  						var today = Date.parse('today');
@@ -260,7 +260,7 @@ angular.module('slatwalladmin')
 		  						
 		  					}
 				  		}
-				  		if(selectedCondition.dateInfo.type === 'range'){
+				  		if(selectedCondition.dateInfo.type == 'range'){
 				  			selectedCondition.showCriteriaStart = true;
 				  			selectedCondition.showCriteriaEnd = true;
 				  			
@@ -268,7 +268,7 @@ angular.module('slatwalladmin')
 				  			selectedCondition.disableCriteriaEnd = false;
 				  			selectedCondition.showNumberOf = false;
 				  		}
-				  		if(selectedCondition.dateInfo.type === 'exactDate'){
+				  		if(selectedCondition.dateInfo.type == 'exactDate'){
 				  			selectedCondition.showCriteriaStart = true;
 				  			selectedCondition.showCriteriaEnd = false;
 				  			selectedCondition.disableCriteriaStart = false;
@@ -291,10 +291,12 @@ angular.module('slatwalladmin')
 			  		$log.debug(selectedFilterProperty);
 				  };
 				  
-				  scope.criteriaRangeChanged = function(selectedFilterProperty){
-					  $log.debug('criteriaRangeChanged');
-					  $log.debug(selectedFilterProperty);
+			scope.criteriaRangeChanged = function(selectedFilterProperty){
+					  $log.debug('The Criteria Range has Changed');
+					  
+				if (selectedFilterProperty !== null && angular.isDefined(selectedFilterProperty)){
 				  	var selectedCondition = selectedFilterProperty.selectedCriteriaType;
+				  	
 				  	if(selectedCondition.dateInfo.type === 'calculation'){
 					  	var measureCount = selectedFilterProperty.criteriaNumberOf;
 		  				switch(selectedCondition.dateInfo.measureType){
@@ -347,11 +349,11 @@ angular.module('slatwalladmin')
 		  				}
 	  				}
 				  	
-	  				if(selectedCondition.dateInfo.type === 'exactDate' && angular.isDefined(selectedFilterProperty.criteriaRangeStart) && angular.isDefined(selectedFilterProperty.criteriaRangeStart.setHours)){
+	  				if(selectedCondition.dateInfo.type == 'exactDate' && angular.isDefined(selectedFilterProperty.criteriaRangeStart) && angular.isDefined(selectedFilterProperty.criteriaRangeStart.setHours)){
 	  					selectedFilterProperty.criteriaRangeStart = selectedFilterProperty.criteriaRangeStart.setHours(0,0,0,0);
 	  					selectedFilterProperty.criteriaRangeEnd = new Date(selectedFilterProperty.criteriaRangeStart).setHours(23,59,59,999);
 	  				}
-	  				if(selectedCondition.dateInfo.type === 'range' ){
+	  				if(selectedCondition.dateInfo.type == 'range' ){
 	  					if(angular.isDefined(selectedFilterProperty.criteriaRangeStart) && angular.isDefined(selectedFilterProperty.criteriaRangeStart) ){
 	  						selectedFilterProperty.criteriaRangeStart = new Date(selectedFilterProperty.criteriaRangeStart).setHours(0,0,0,0);
 	  					}
@@ -361,14 +363,10 @@ angular.module('slatwalladmin')
 	  					}
 	  					
 	  				}
-				  	
-				  	$log.debug('criteriaRangeChanged');
-			  		$log.debug(selectedCondition); 
-			  		$log.debug(selectedFilterProperty);
+				}
 				  };
-				  console.log('filterItemhere');
-				  console.log(scope.filterItem);
-				  if(angular.isUndefined(scope.filterItem.$$isNew) || scope.filterItem.$$isNew === false){
+
+				  if(scope.filterItem != null & (angular.isUndefined(scope.filterItem.$$isNew) || scope.filterItem.$$isNew === false)){
 					  angular.forEach(scope.conditionOptions, function(conditionOption){
 							if(conditionOption.display == scope.filterItem.conditionDisplay ){
 								scope.selectedFilterProperty.selectedCriteriaType = conditionOption;

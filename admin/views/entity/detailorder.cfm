@@ -105,9 +105,19 @@ Notes:
 		<!--- Tabs --->
 		<hb:HibachiEntityDetailGroup object="#rc.order#">
 			<hb:HibachiEntityDetailItem view="admin:entity/ordertabs/basic" open="true" text="#$.slatwall.rbKey('admin.define.basic')#" />
+			
 			<!--- Order Items --->
 			<hb:HibachiEntityDetailItem view="admin:entity/ordertabs/orderitems" open="true" />
 			
+			<!--- Add Sale Items --->	
+   			<cfif listFindNoCase("otSalesOrder,otExchangeOrder", rc.order.getOrderType().getSystemCode())>		
+    				<hb:HibachiEntityDetailItem view="admin:entity/ordertabs/add_saleorderitems" open="true"count="#rc.order.getSaleItemSmartList().getRecordsCount()#" />		
+   			</cfif>	
+			
+			<!--- Add Return Items --->
+			<cfif listFindNoCase("otSalesOrder,otExchangeOrder", rc.order.getOrderType().getSystemCode())>		
+    				<hb:HibachiEntityDetailItem view="admin:entity/ordertabs/add_returnorderitems" open="true"count="#rc.order.getReturnItemSmartList().getRecordsCount()#" />		
+   			</cfif>
 			
 			<!--- Payments --->
 			<hb:HibachiEntityDetailItem view="admin:entity/ordertabs/orderpayments" count="#rc.order.getOrderPaymentsCount()#" />
