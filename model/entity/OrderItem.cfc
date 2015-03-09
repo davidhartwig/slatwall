@@ -254,8 +254,16 @@ component entityname="SlatwallOrderItem" table="SwOrderItem" persistent="true" a
 		if(isNull(arguments.orderItem)){
 			arguments.orderItem = this;
 		}
+		var amountType = "";
+		if (!isNull(arguments.orderItem.getProductBundleGroup()) && !isNull(arguments.orderItem.getProductBundleGroup().getAmountType())){
+			amountType = arguments.orderItem.getProductBundleGroup().getAmountType();	
+		}else {
+			amountType = "fixed";//default
+		}
 		
-		var amountType = arguments.orderItem.getProductBundleGroup().getAmountType();
+		if (isNull(amountType)){
+			amountType = "fixed";
+		}
 		//fixed
 		if(amountType == 'fixed'){
 			return arguments.orderItem.getProductBundleGroup().getAmount();

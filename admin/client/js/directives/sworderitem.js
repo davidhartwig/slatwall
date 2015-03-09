@@ -65,7 +65,6 @@ angular.module('slatwalladmin').directive('swOrderItem',
 					});
 				});
 			}
-			
 			/**
 			 * Returns the current position in the queue for an orderItem that's on the waiting list.
 			 */
@@ -105,7 +104,6 @@ angular.module('slatwalladmin').directive('swOrderItem',
 								}
 							});
 						});	
-				
 			};
 			//define how we get child order items
 			var columnsConfig =[
@@ -271,8 +269,8 @@ angular.module('slatwalladmin').directive('swOrderItem',
  				    "propertyIdentifier": "_orderitem.orderFulfillment.pickupLocation.primaryAddress.address",
  				    "isVisible": true,
  				    "isDeletable": true
-			   },
-			    {
+					},
+			    		{
 					   "title":"Total",
 					   "propertyIdentifier":"_orderitem.itemTotal",
 					   "persistent":false
@@ -390,9 +388,30 @@ angular.module('slatwalladmin').directive('swOrderItem',
 						child.hide = !child.hide;
 						scope.orderItem.clicked = !scope.orderItem.clicked;
 					});
-					
 				}
 			};
+			/**
+			 * Cancel an event registration (delete the deposit orderitem) and create a return orderitem. 
+			 */
+			scope.cancelEventRegistrationFor = function(orderItem){
+				$log.debug("CP: Canceling Event Registration For:");
+				$log.debug(orderItem.eventRegistrations[0].systemCode);
+				$log.debug("Setting orderItem status type.");
+				for (var event in orderItem.eventRegistrations){
+					$log.debug(event.$$getRegistrationStatusType());
+					
+				}
+				
+				
+			};
+			/**
+			 * Claim event registration essentially turns the deposit item into a sale orderitem.
+			 */
+			scope.claimEventRegistrationFor = function(orderItem){
+				$log.debug("Claiming Event Registration For: ");
+				$log.debug(orderItem);
+				$log.debug(orderItem.$$getOrderItemStatusType());
+			};	
 			
 		}
 	};
