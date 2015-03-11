@@ -879,6 +879,7 @@ Notes:
 					    		var modifiedData = _getModifiedData(entityInstance);
 					    		$log.debug('modifiedData complete');
 					    		$log.debug(modifiedData);
+					    		timeoutPromise.valid = modifiedData.valid;
 					    		if(modifiedData.valid){
 						    		var params = {};
 									params.serializedJsonData = angular.toJson(modifiedData.value);
@@ -895,12 +896,11 @@ Notes:
 										_addReturnedIDs(returnedIDs,modifiedData.objectLevel);
 									});
 								}else{
-						    		
+						    		;
 						    		//select first, visible, and enabled input with a class of ng-invalid
-								
 						    		var target = $('input.ng-invalid:first:visible:enabled');
 						    		$log.debug('input is invalid');
-								$log.debug(target);
+									$log.debug(target);
 						    		target.focus();
 						    		
 									var targetID = target.attr('id');
@@ -909,6 +909,7 @@ Notes:
 						    		$anchorScroll();
 					    		}
 							});
+							
 							return timeoutPromise;
 				    		/*
 				    		

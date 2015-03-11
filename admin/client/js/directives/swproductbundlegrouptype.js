@@ -127,12 +127,18 @@ angular.module('slatwalladmin')
 				//Saves product bundle group type
 				$scope.saveProductBundleGroupType = function(){
 					//Gets the promise from save
+					
 					var promise = $scope.productBundleGroup.data.productBundleGroupType.$$save();
+					console.log('testhere');
+					console.log(promise);
+					
 					promise.then(function(response){
 						//Calls close function
-						$scope.closeAddScreen();
+						if(promise.valid){
+							$scope.closeAddScreen();
+						}
 					});
-
+					
 				};
 				
 				//Sets up clickOutside Directive call back arguments
