@@ -464,9 +464,9 @@ component entityname="SlatwallOrderItem" table="SwOrderItem" persistent="true" a
 	// Parent Order Item (many-to-one)
 	public void function setParentOrderItem(required any parentOrderItem) {
 		variables.parentOrderItem = arguments.parentOrderItem;
-		if(isNew() or !arguments.parentOrderItem.hasChildOrderItem( this )) {
-			arrayAppend(arguments.parentOrderItem.getChildOrderItems(), this);
-		}
+		//if(isNew() or !arguments.parentOrderItem.hasChildOrderItem( this )) {
+		//	arrayAppend(arguments.parentOrderItem.getChildOrderItems(), this);
+		//}
 	}
 	
 	public void function removeParentOrderItem(any parentOrderItem) {

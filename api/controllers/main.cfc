@@ -84,11 +84,13 @@ component output="false" accessors="true" extends="Slatwall.org.Hibachi.HibachiC
 		var value = arguments.rc.value;
 		var entity = getService('hibachiService').invokeMethod('new#objectName#');
 		entity.invokeMethod('set#propertyIdentifier#',{1=value});
-		
-		
 		var response["uniqueStatus"] = service.validate_unique(entity, propertyIdentifier);
 		arguments.rc.apiResponse.content = response;
 		
+	}
+	public any function getProcessObjectMetaData(required struct rc){
+		var data = getService('hibachiService').getProcessObjectMetaData(rc.processObjectName);
+		arguments.rc.apiResponse.content = {data=data};
 	}
 	public any function getObjectOptions(required struct rc){
 		var data = getCollectionService().getObjectOptions();

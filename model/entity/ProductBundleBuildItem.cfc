@@ -46,28 +46,27 @@
 Notes:
 
 */
+/**
+* This CFC ProductBundleBuildItem represents a step in the product bundle building process such as a single charm being added to a necklace.
+* The charm represents to Build Item and the Necklace would be the parent that the child will be attached to. As such, each Build Item has only
+* one Build, but a build has many Build Items. 
+**/
 component entityname="SlatwallProductBundleBuildItem" table="SwProductBundleBuildItem" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="productService" hb_permission="productBundleBuild.productBundleBuildItems" {
 	
 	// Persistent Properties
 	property name="productBundleBuildItemID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
 	property name="quantity" ormtype="integer";
+	property name="minQuantity" ormtype="integer";
+	property name="maxQuantity" ormType="integer";
+	property name="itemName" ormType="string";
 	
-	// Calculated Properties
-
 	// Related Object Properties (many-to-one)
-	property name="productBundleBuild" cfc="ProductBundleBuild" fieldtype="many-to-one" fkcolumn="productBundleBuildID";
 	property name="productBundleGroup" cfc="ProductBundleGroup" fieldtype="many-to-one" fkcolumn="productBundleGroupID";
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
-	
 	// Related Object Properties (one-to-many)
-	
-	// Related Object Properties (many-to-many - owner)
-
-	// Related Object Properties (many-to-many - inverse)
-	
+	property name="productBundleBuild" cfc="ProductBundleBuild" fieldtype="many-to-one" inverse="true";
 	// Remote Properties
 	property name="remoteID" hb_populateEnabled="false" ormtype="string";
-	
 	// Audit Properties
 	property name="createdDateTime" hb_populateEnabled="false" ormtype="timestamp";
 	property name="createdByAccountID" hb_populateEnabled="false" ormtype="string";
@@ -78,7 +77,6 @@ component entityname="SlatwallProductBundleBuildItem" table="SwProductBundleBuil
 	
 	// Deprecated Properties
 
-
 	// ==================== START: Logical Methods =========================
 	
 	// ====================  END: Logical Methods ==========================
@@ -88,9 +86,61 @@ component entityname="SlatwallProductBundleBuildItem" table="SwProductBundleBuil
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	// Product Bundle Build (many-to-one)
+	
+	/**
+	 * Returns the product bundle build for this build item
+	 **/
+	public any function getProductBundleBuild()
+	{
+		return variables.productBundleBuild;	
+	}
+	/**
+	 * Returns true product bundle build is set. 
+	 **/
+	public boolean function hasProductBundleBuild()
+	{
+		if (!isNull(variables.productBundleBuild))
+		{
+			return true;
+		}
+		return false;
+	}
+	/**
+	 * Removes the product bundle build for this build item
+	 **/
+	public void function removeProductBundleBuild(any productBundleBuild) 
+	{
+		variables.productBundleBuild = null;
+	}
+	/**
+	 * Returns the product bundle group for this build item
+	 **/
+	 public any function getProductBundleGroup()
+	 {
+	 	return (!isNull(variables.productBundleGroup)) ? variables.productBundleGroup : false;
+	 }
+	 /**
+	 * Sets the product bundle group for this build item 
+	 **/
+	  public any function setProductBundleGroup(any productBundleGroup)
+	 {
+	 	variables.productBundleGroup = arguments.productBundleGroup;
+	 }
+	 /**
+	 * Returns true if this item has a product bundle group
+	 **/
+	public boolean function hasProductBundleGroup()
+	{
+		if (!isNull(variables.productBundleGroup))
+		{
+			return true;
+		}
+		return false;
+	}
 	
 	// =============  END:  Bidirectional Helper Methods ===================
-
+	
 	// =============== START: Custom Validation Methods ====================
 	
 	// ===============  END: Custom Validation Methods =====================

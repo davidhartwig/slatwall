@@ -47,39 +47,42 @@ Notes:
 
 */
 component entityname="SlatwallProductBundleBuild" table="SwProductBundleBuild" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="productService" hb_permission="this" {
-	
-	// Persistent Properties
+	/* properties */
 	property name="productBundleBuildID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
-	
-	// Calculated Properties
-
 	// Related Object Properties (many-to-one)
+	property name="order" hb_populateEnabled="false" cfc="Order" fieldtype="many-to-one" fkcolumn="orderID" hb_cascadeCalculate="true" fetch="join";
+	property name="orderFulfillment" cfc="OrderFulfillment" fieldtype="many-to-one" fkcolumn="orderFulfillmentID";
 	property name="productBundleSku" cfc="Sku" fieldtype="many-to-one" fkcolumn="productBundleSkuID";
+	property name="productBundleGroup" cfc="ProductBundleGroup" fieldtype="many-to-one" fkcolumn="productBundleGroupID";
 	property name="session" cfc="Session" fieldtype="many-to-one" fkcolumn="sessionID";
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	
-	// Related Object Properties (one-to-many)
-	
+	// Related Object Properties (one-to-many) //Generates Add, Remove and Has Methods
+	property name="productBundleBuildItems" cfc="ProductBundleBuildItem" Singularname="productBundleBuildItem"  fieldtype="one-to-many" fkcolumn="productBundleBuildID" cascade="all-delete-orphan" type="array";
 	// Related Object Properties (many-to-many - owner)
 
 	// Related Object Properties (many-to-many - inverse)
 	
 	// Remote Properties
-	property name="remoteID" hb_populateEnabled="false" ormtype="string";
+	property name="remoteID" hb_populateEnabled="false" type="string"  ormtype="string";
 	
 	// Audit Properties
-	property name="createdDateTime" hb_populateEnabled="false" ormtype="timestamp";
-	property name="createdByAccountID" hb_populateEnabled="false" ormtype="string";
-	property name="modifiedDateTime" hb_populateEnabled="false" ormtype="timestamp";
-	property name="modifiedByAccountID" hb_populateEnabled="false" ormtype="string";
+	property name="createdDateTime" hb_populateEnabled="false" column="createdDateTime" type="date" ormtype="timestamp";
+	property name="createdByAccountID" hb_populateEnabled="false" column="createdByAccountID" type="string" ormtype="string";
+	property name="modifiedDateTime" hb_populateEnabled="false" column="modifiedDateTime" type="date" ormtype="timestamp";
+	property name="modifiedByAccountID" hb_populateEnabled="false" column="modifiedByAccountID" type="string" ormtype="string";
 	
 	// Non-Persistent Properties
 	
 	// Deprecated Properties
-
+	
 
 	// ==================== START: Logical Methods =========================
-	
+	any function init()
+	{
+		//Set some default values...
+		this.productBundleBuildItem = [];
+	}
 	// ====================  END: Logical Methods ==========================
 	
 	// ============ START: Non-Persistent Property Methods =================
@@ -87,6 +90,99 @@ component entityname="SlatwallProductBundleBuild" table="SwProductBundleBuild" p
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
+	// Order (many-to-one)
+	public void function setOrder(required any order) {
+		variables.order = arguments.order;
+		if(isNew() or !arguments.order.hasOrderItem( this )) {
+			arrayAppend(arguments.order.getOrderItems(), this);
+		}
+	}
+	public void function removeOrder(any order) {
+		if(!structKeyExists(arguments, "order")) {
+			arguments.order = variables.order;
+		}
+		var index = arrayFind(arguments.order.getOrderItems(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.order.getOrderItems(), index);
+		}
+		
+		// Remove from order fulfillment to trigger those actions
+		if(!isNull(getOrderFulfillment())) {
+			removeOrderFulfillment();	
+		} else if (!isNull(getOrderReturn())) {
+			removeOrderReturn();
+		}
+		structDelete(variables, "order");
+	}
+	
+	// Order Fulfillment (many-to-one)
+	public void function setOrderFulfillment(required any orderFulfillment) {
+		variables.orderFulfillment = arguments.orderFulfillment;
+		if(isNew() or !arguments.orderFulfillment.hasOrderFulfillmentItem( this )) {
+			arrayAppend(arguments.orderFulfillment.getOrderFulfillmentItems(), this);
+		}
+	}
+	public void function removeOrderFulfillment(any orderFulfillment) {
+		if(!structKeyExists(arguments, "orderFulfillment")) {
+			arguments.orderFulfillment = variables.orderFulfillment;
+		}
+		var index = arrayFind(arguments.orderFulfillment.getOrderFulfillmentItems(), this);
+		if(index > 0) {
+			arrayDeleteAt(arguments.orderFulfillment.getOrderFulfillmentItems(), index);
+			
+			if(!arrayLen(arguments.orderFulfillment.getOrderFulfillmentItems()) && !isNull(getOrder())) {
+				getOrder().removeOrderFulfillment(arguments.orderFulfillment);
+			}
+		}
+		structDelete(variables, "orderFulfillment");
+	}
+	/*
+	 * Removes all of the product bundle build items from this build.
+	 */
+	public function removeAllProductBundleBuildItems()
+	{
+		if( !IsNull( this.getProductBundleBuildItems())){
+        		ArrayClear( this.getProductBundleBuildItems() );
+        	}
+	}
+	/*
+	 * Overrides the add method to call add from the other side of the relationship.
+	 *
+	 */
+ 	/*void function addProductBundleBuildItem( required productBundleBuildItem )
+ 	{
+ 		if( !hasProductBundleBuildItem() )
+ 		{
+ 			variables.productBundleBuildItem = [];
+ 		}
+ 		ArrayAppend( variables.productBundleBuildItem, arguments.productBundleBuildItem );
+ 		arguments.productBundleBuildItem.setProductBundleBuild( this );
+ 	}*/
+	/*
+	 * Generates an orderitem using a parent/child relationship from the information contained
+	 * in the productBundleGroup, where the productBundleBuildItems represent childOrderItems
+	 * and the productBundleBuild represents the parentOrderItem.
+	 */
+	public any function generateOrderItemsFromProductBundleBuild(any order)
+	{
+		//For each productBundleBuildItem, create an orderItem and set the id to this id.
+		var hibachiService = getService("HibachiService");
+		var orderItem = hibachiService.new("OrderItem");
+		orderItem.setOrderItemID=getProductBundleBuildID();
+		for (var item in this.getProductBundleBuildItems()){
+			if (!isNull(item.getProductBundleBuildItemID()))
+			{
+				var childOrderItem = hibachiService.new("OrderItem");
+				childOrderItem.setOrderItemID(item.getProductBundleBuildItemID());//Child ID is the builditem id.
+				childOrderItem.setParentOrderItem(orderItem.getOrderItemID());//Set the parent orderitem for each child.
+				arguments.order.addOrderItem(childOrderItem);//Add the child to the order.
+				
+			}
+		}
+		arguments.order.addOrderItem(orderItem); //Add the parent to the order.
+		return arguments.order;//Parent with children.
+	}
+	
 	
 	// =============  END:  Bidirectional Helper Methods ===================
 

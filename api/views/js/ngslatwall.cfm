@@ -177,6 +177,16 @@ Notes:
 					      	newEntity:function(entityName){
 					      		return new _jsEntities[entityName];
 					      	},
+					      	/*Returns the metadata for a processObject*/
+					      	getProcessObjectMetaData:function(processObjectName){
+					      		var deferred = $q.defer();
+					            return $http.get(_config.baseURL + '/index.cfm/?slatAction=api:main.getProcessObjectMetaData&processObjectName=' + processObjectName)
+					            .success(function(data){
+					  				deferred.resolve(data);
+					  			}).error(function(reason){
+					  				deferred.reject(reason);
+					  			});	
+					      	},
 					      	/*basic entity getter where id is optional, returns a promise*/
 					  		getEntity:function(entityName, options){
 					  			/*
@@ -236,7 +246,7 @@ Notes:
 						  				}
 						  				
 						  				return data;
-						  			};;
+						  			};
 					  			}
 					  			
 					  			$http.get(urlString,
