@@ -50,6 +50,7 @@ component entityname="SlatwallProductBundleBuild" table="SwProductBundleBuild" p
 	
 	// Persistent Properties
 	property name="productBundleBuildID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";
+	property name="productBundleBuildName" ormtype="string" unsavedvalue="" default="";
 	
 	// Calculated Properties
 
@@ -59,6 +60,7 @@ component entityname="SlatwallProductBundleBuild" table="SwProductBundleBuild" p
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	
 	// Related Object Properties (one-to-many)
+	property name="productBundleBuildItems" cfc="ProductBundleBuildItem" fieldtype="one-to-many" fkcolumn="productBundleBuildItemID";
 	
 	// Related Object Properties (many-to-many - owner)
 
@@ -87,7 +89,69 @@ component entityname="SlatwallProductBundleBuild" table="SwProductBundleBuild" p
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
-	
+	// Product Bundle Sku (many-to-one)    
+    	public void function setProductBundleSku(required any productBundleSku) {    
+    		variables.productBundleSku = arguments.productBundleSku;    
+    		if(isNew() or !arguments.productBundleSku.hasProductBundleBuild( this )) {    
+    			arrayAppend(arguments.productBundleSku.getProductBundleBuilds(), this);    
+    		}    
+    	}    
+    	public void function removeProductBundleSku(any productBundleSku) {    
+    		if(!structKeyExists(arguments, "productBundleSku")) {    
+    			arguments.productBundleSku = variables.productBundleSku;    
+    		}    
+    		var index = arrayFind(arguments.productBundleSku.getProductBundleBuilds(), this);    
+    		if(index > 0) {    
+    			arrayDeleteAt(arguments.productBundleSku.getProductBundleBuilds(), index);    
+    		}    
+    		structDelete(variables, "productBundleSku");    
+    	}
+    	
+    	// Session (many-to-one)        
+    public void function setSession(required any session) {        
+    		variables.session = arguments.session;        
+    		if(isNew() or !arguments.session.hasSession( this )) {        
+    			arrayAppend(arguments.session.getSessions(), this);        
+    		}        
+   	}   
+        	     
+    	public void function removeSession(any session) {        
+    		if(!structKeyExists(arguments, "session")) {        
+    			arguments.session = variables.session;        
+    		}        
+    		var index = arrayFind(arguments.session.getSessions(), this);        
+    		if(index > 0) {        
+    			arrayDeleteAt(arguments.session.getSessions(), index);        
+    		}        
+    		structDelete(variables, "session");        
+        	}
+    // Account (many-to-one)    
+    	public void function setAccount(required any account) {    
+    		variables.account = arguments.account;    
+    		if(isNew() or !arguments.account.hasAccount( this )) {    
+    			arrayAppend(arguments.account.getAccounts(), this);    
+    		}    
+    	}    
+    	public void function removeAccount(any account) {    
+    		if(!structKeyExists(arguments, "account")) {    
+    			arguments.account = variables.account;    
+    		}    
+    		var index = arrayFind(arguments.account.getAccounts(), this);    
+    		if(index > 0) {    
+    			arrayDeleteAt(arguments.account.getAccounts(), index);    
+    		}    
+    		structDelete(variables, "account");    
+    	}
+    	// Product Bundle Build Items (one-to-many)
+    	public void function addProductBundleBuildItem(required any productBundleBuildItem) {         
+        arguments.productBundleBuildItem.setProductBundleBuild( this );         
+    }         
+    public void function removeProductBundleBuildItem(required any productBundleBuildItem) {         
+        arguments.productBundleBuildItem.removeProductBundleBuild( this );         
+    }        
+         	
+    	
+    	
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// =============== START: Custom Validation Methods ====================

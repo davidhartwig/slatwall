@@ -47,8 +47,6 @@ Notes:
 
 */
 component entityname="SlatwallProductBundleGroup" table="SwProductBundleGroup" persistent="true" accessors="true" extends="HibachiEntity" hb_serviceName="productService" hb_permission="productBundleSku.productBundleGroups" {
-	
-	
 
 	// Persistent Properties
 	property name="productBundleGroupID" ormtype="string" length="32" fieldtype="id" generator="uuid" unsavedvalue="" default="";

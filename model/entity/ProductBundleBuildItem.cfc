@@ -55,7 +55,7 @@ component entityname="SlatwallProductBundleBuildItem" table="SwProductBundleBuil
 	// Calculated Properties
 
 	// Related Object Properties (many-to-one)
-	property name="productBundleBuild" cfc="ProductBundleBuild" fieldtype="many-to-one" fkcolumn="productBundleBuildID";
+	property name="productBundleBuild" cfc="ProductBundleBuild" fieldtype="many-to-one" fkcolumn="productBundleBuildID" inverse="true";
 	property name="productBundleGroup" cfc="ProductBundleGroup" fieldtype="many-to-one" fkcolumn="productBundleGroupID";
 	property name="sku" cfc="Sku" fieldtype="many-to-one" fkcolumn="skuID";
 	
@@ -88,7 +88,57 @@ component entityname="SlatwallProductBundleBuildItem" table="SwProductBundleBuil
 	// ============  END:  Non-Persistent Property Methods =================
 		
 	// ============= START: Bidirectional Helper Methods ===================
-	
+	// ProductBundleBuild (many-to-one)    
+    	public void function setProductBundleBuild(required any productBundleBuild) {    
+    		variables.productBundleBuild = arguments.productBundleBuild;    
+    		if(isNew() or !arguments.productBundleBuild.hasProductBundleBuildItem( this )) {    
+    			arrayAppend(arguments.productBundleBuild.getProductBundleBuildItems(), this);    
+    		}    
+    	}    
+    	public void function removeProductBundleBuild(any productBundleBuild) {    
+    		if(!structKeyExists(arguments, "productBundleBuild")) {    
+    			arguments.productBundleBuild = variables.productBundleBuild;    
+    		}    
+    		var index = arrayFind(arguments.productBundleBuild.getProductBundleBuildItems(), this);    
+    		if(index > 0) {    
+    			arrayDeleteAt(arguments.productBundleBuild.getProductBundleBuildItems(), index);    
+    		}    
+    		structDelete(variables, "productBundleBuild");    
+    	}
+    	// ProductBundleGroup (many-to-one)        
+    public void function setProductBundleGroup(required any productBundleGroup) {        
+        		variables.productBundleGroup = arguments.productBundleGroup;        
+        		if(isNew() or !arguments.productBundleGroup.hasproductBundleBuildItem( this )) {        
+        			arrayAppend(arguments.productBundleGroup.getProductBundleBuildItems(), this);        
+        		}        
+   	}        
+   	public void function removeProductBundleGroup(any productBundleGroup) {        
+        		if(!structKeyExists(arguments, "productBundleGroup")) {        
+        			arguments.productBundleGroup = variables.productBundleGroup;        
+        		}        
+        		var index = arrayFind(arguments.productBundleGroup.getProductBundleBuildItems(), this);        
+        		if(index > 0) {        
+        			arrayDeleteAt(arguments.productBundleGroup.getProductBundleBuildItems(), index);        
+        		}        
+        		structDelete(variables, "productBundleGroup");        
+   	}
+    // Sku (many-to-one)    
+    	public void function setSku(required any sku) {    
+    		variables.sku = arguments.sku;    
+    		if(isNew() or !arguments.sku.hasSku( this )) {    
+    			arrayAppend(arguments.sku.getSkus(), this);    
+    		}    
+    	}    
+    	public void function removeSku(any sku) {    
+    		if(!structKeyExists(arguments, "sku")) {    
+    			arguments.sku = variables.sku;    
+    		}    
+    		var index = arrayFind(arguments.sku.getSkus(), this);    
+    		if(index > 0) {    
+    			arrayDeleteAt(arguments.sku.getSkus(), index);    
+    		}    
+    		structDelete(variables, "sku");    
+    	}
 	// =============  END:  Bidirectional Helper Methods ===================
 
 	// =============== START: Custom Validation Methods ====================
