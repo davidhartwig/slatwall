@@ -91,7 +91,7 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 	property name="eventRegistrations" singularname="eventRegistration" fieldtype="one-to-many" fkcolumn="skuID" cfc="EventRegistration" inverse="true" cascade="all-delete-orphan" lazy="extra"; 
 	property name="assignedSkuBundles" singularname="assignedSkuBundle" fieldtype="one-to-many" fkcolumn="bundledSkuID" cfc="SkuBundle" inverse="true" cascade="all-delete-orphan" lazy="extra"; // No Bi-Directional
 	property name="productBundleGroups" type="array" cfc="ProductBundleGroup" singularname="productBundleGroup"  fieldtype="one-to-many" fkcolumn="productBundleSkuID" cascade="all-delete-orphan" inverse="true";
-	property name="productBundleBuilds" type="array" cfc="ProductBundleBuilds" singularname="productBundleBuild"  fieldtype="one-to-many" fkcolumn="productBundleBuildID" cascade="all-delete-orphan" inverse="true";
+	property name="productBundleBuilds" type="array" cfc="ProductBundleBuild" singularname="productBundleBuild"  fieldtype="one-to-many" fkcolumn="productBundleBuildID" cascade="all-delete-orphan" inverse="true";
 	property name="productReviews" singularname="productReview" cfc="ProductReview" fieldtype="one-to-many" fkcolumn="skuID" cascade="all-delete-orphan" inverse="true";
 	
 	// Related Object Properties (many-to-many - owner)
@@ -430,7 +430,21 @@ component entityname="SlatwallSku" table="SwSku" persistent=true accessors=true 
 		return result;
 	}
 	
-	
+	//Bidirectional Helper Methods
+	// Product Bundle Build  (one-to-many)    
+    	public void function addProductBundleBuild(required any productBundleBuild) {    
+    		arguments.productBundleBuild.setSkus( this );    
+    	}    
+    	public void function removeProductBundleBuild(required any productBundleBuild) {    
+    		arguments.productBundleBuild.removeSkus( this );    
+    	}
+    	public void function hasProductBundleBuild(required any productBundleBuild) {    
+    		if (!isNull(this.productBundleBuild)){
+    			return true;
+    		}else{
+    			return false;
+    		}
+    	} 
 	// ====================  END: Logical Methods ==========================
 	
 	// ============ START: Non-Persistent Property Methods =================

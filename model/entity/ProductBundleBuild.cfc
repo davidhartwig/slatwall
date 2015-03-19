@@ -60,7 +60,7 @@ component entityname="SlatwallProductBundleBuild" table="SwProductBundleBuild" p
 	property name="account" cfc="Account" fieldtype="many-to-one" fkcolumn="accountID";
 	
 	// Related Object Properties (one-to-many)
-	property name="productBundleBuildItems" cfc="ProductBundleBuildItem" fieldtype="one-to-many" fkcolumn="productBundleBuildItemID";
+	property name="productBundleBuildItems" cfc="ProductBundleBuildItem" singularname="productBundleBuildItem" fieldtype="one-to-many" fkcolumn="productBundleBuildItemID";
 	
 	// Related Object Properties (many-to-many - owner)
 
@@ -149,7 +149,30 @@ component entityname="SlatwallProductBundleBuild" table="SwProductBundleBuild" p
     public void function removeProductBundleBuildItem(required any productBundleBuildItem) {         
         arguments.productBundleBuildItem.removeProductBundleBuild( this );         
     }        
-         	
+    /*
+	* Generates an orderitem using a parent/child relationship from the information contained
+	* in the productBundleGroup, where the productBundleBuildItems represent childOrderItems
+	* and the productBundleBuild represents the parentOrderItem.
+	*/
+	public any function generateOrderItemsFromProductBundleBuild(any order)
+	{
+		//For each productBundleBuildItem, create an orderItem and set the id to this id.
+		var hibachiService = getService("HibachiService");
+		var orderItem = hibachiService.new("OrderItem");
+		orderItem.setOrderItemID=getProductBundleBuildID();
+		for (var item in this.getProductBundleBuildItems()){
+			if (!isNull(item.getProductBundleBuildItemID()))
+			{
+				var childOrderItem = hibachiService.new("OrderItem");
+				childOrderItem.setOrderItemID(item.getProductBundleBuildItemID());//Child ID is the builditem id.
+				childOrderItem.setParentOrderItem(orderItem.getOrderItemID());//Set the parent orderitem for each child.
+				arguments.order.addOrderItem(childOrderItem);//Add the child to the order.
+				
+			}
+		}
+		arguments.order.addOrderItem(orderItem); //Add the parent to the order.
+		return arguments.order;//Parent with children.
+	}     	
     	
     	
 	// =============  END:  Bidirectional Helper Methods ===================
