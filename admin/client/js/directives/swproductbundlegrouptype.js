@@ -93,7 +93,7 @@ angular.module('slatwalladmin')
 						}else{
 							$scope.showAddProductBundleGroupTypeBtn = false;
 						}
-						
+
 						return $scope.productBundleGroupTypes.value;
 					});
 				};
@@ -139,7 +139,9 @@ angular.module('slatwalladmin')
 						var promise = $scope.productBundleGroup.data.productBundleGroupType.$$save();
 						promise.then(function(response){
 							//Calls close function
+							if (promise.valid){
 							$scope.closeAddScreen();
+							}
 						});
 					
 				};

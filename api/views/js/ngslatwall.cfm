@@ -337,8 +337,7 @@ Notes:
 					  			if(angular.isDefined(context)){
 					  				params.context = context;
 					  			}
-					  			
-					  			
+					 			
 					  			$http({
 					  				url:urlString,
 					  				method:'POST',
@@ -874,11 +873,17 @@ Notes:
 				    	var _save = function(entityInstance){
 				    		 var timeoutPromise = $timeout(function(){
 					    		$log.debug('save begin');
+					    		$log.debug(entityInstance);
+					    		if (angular.isUndefined(entityInstance.$$getID()))
+					    		{
+					    			return timeoutPromise;
+					    		}
 					    		var entityID = entityInstance.$$getID();
 					    		
 					    		var modifiedData = _getModifiedData(entityInstance);
 					    		$log.debug('modifiedData complete');
 					    		$log.debug(modifiedData);
+					    		timeoutPromise.valid = modifiedData.valid;
 					    		if(modifiedData.valid){
 						    		var params = {};
 									params.serializedJsonData = angular.toJson(modifiedData.value);
