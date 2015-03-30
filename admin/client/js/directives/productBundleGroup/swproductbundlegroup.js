@@ -33,6 +33,7 @@ angular.module('slatwalladmin')
 			},
 			link: function(scope, element,attrs,productBundleGroupsController){
 				var timeoutPromise;
+				var limitStep = 10; //mass amount of records to show
 				scope.$id = 'productBundleGroup';
 				$log.debug('productBundleGroup');
 				$log.debug(scope.productBundleGroup);
@@ -137,6 +138,17 @@ angular.module('slatwalladmin')
 				
 				scope.productBundleGroupFilters.getFiltersByTerm = function(keyword,filterTerm){
 					scope.loading = true;
+					if (scope.productBundleGroupFilters.value.length !== 0){
+						if (scope.limit > scope.productBundleGroupFilters.value.length){
+							scope.limit = scope.productBundleGroupFilters.value.length;
+						}
+					}
+					//If the filterTerm is null, reset the limit count on the list so that
+					//when the list is cleared, the count starts over.
+					if (keyword === ''){
+						scope.limit = 10;
+					}
+					
 					var _loadingCount;
 					if(timeoutPromise) {
 						$timeout.cancel(timeoutPromise);
@@ -167,6 +179,9 @@ angular.module('slatwalladmin')
 												//This sorts the array of objects by the objects' "type" property alphabetically
 												scope.productBundleGroupFilters.value = utilityService.arraySorter(scope.productBundleGroupFilters.value, "type");
 												$log.debug(scope.productBundleGroupFilters.value);
+												if (scope.productBundleGroupFilters.value.length < scope.limit){
+													scope.limit = scope.productBundleGroupFilters.value.length;
+												}
 												scope.loading = false;
 												
 											}
@@ -180,11 +195,11 @@ angular.module('slatwalladmin')
 							.then(function(value){
 								$log.debug('getFiltersByTerm');
 								$log.debug(value);
+								
 								scope.productBundleGroupFilters.value = productBundleService.formatProductBundleGroupFilters(value.pageRecords,filterTerm) || [];
 								scope.loading = false;
 								$log.debug('productBundleGroupFilters');
 								$log.debug(scope.productBundleGroupFilters);
-								
 							});
 						}
 					}, 500);
@@ -224,6 +239,22 @@ angular.module('slatwalladmin')
 					});
 				}
 				
+				/**
+				 * Handles allowing more items in the list. Default is 10 items displayed at a time.
+				 */
+				scope.limit = limitStep;
+				scope.incrementLimit = function() {
+					scope.loading = true;
+					//Set loading icon
+				    scope.limit += limitStep;
+				    //Don't display more than we have.
+				    if (scope.limit >= scope.productBundleGroupFilters.value.length){
+				    		scope.loading = false; //nothing else to load.
+				    		scope.limit = scope.productBundleGroupFilters.value.length;
+				    }
+				    scope.loading = false; 
+				};
+
 				scope.removeProductBundleGroupFilter = function(index){
 					//Pushes item back into array
 					scope.productBundleGroupFilters.value.push(scope.productBundleGroup.data.skuCollectionConfig.filterGroups[0].filterGroup[index]);
