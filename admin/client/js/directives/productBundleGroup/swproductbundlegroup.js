@@ -138,11 +138,7 @@ angular.module('slatwalladmin')
 				
 				scope.productBundleGroupFilters.getFiltersByTerm = function(keyword,filterTerm){
 					scope.loading = true;
-					if (scope.productBundleGroupFilters.value.length !== 0){
-						if (scope.limit > scope.productBundleGroupFilters.value.length){
-							scope.limit = scope.productBundleGroupFilters.value.length;
-						}
-					}
+					
 					//If the filterTerm is null, reset the limit count on the list so that
 					//when the list is cleared, the count starts over.
 					if (keyword === ''){
